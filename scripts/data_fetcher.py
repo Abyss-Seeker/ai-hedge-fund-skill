@@ -122,9 +122,12 @@ def ticker_to_westock(ticker: str) -> str:
     t = ticker.strip().upper()
     if not t:
         return t
-    # 已经有 westock 前缀（usX / shX / szX / hkX / bjX）
-    if re.match(r"^(US|SH|SZ|HK|BJ)\d+", t) or t.startswith("US"):
-        return t
+    # 已经有 westock 前缀（usX / shX / szX / hkX / bjX）——只 lower 前缀，代码部分保持大写
+    if m := re.match(r"^(US|SH|SZ|HK|BJ)(\d.*)$", t):
+        return m.group(1).lower() + m.group(2)
+    if t.startswith("US"):
+        # usAAPL / usGOOGL 等等 —— 只 lower "us" 前缀
+        return "us" + t[2:]
     # 拆 .SH / .SZ / .BJ / .SS / .HK
     m = re.match(r"^(\d{6})\.(SH|SZ|BJ|SS)$", t)
     if m:
