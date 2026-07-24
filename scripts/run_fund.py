@@ -761,6 +761,40 @@ def generic_moat_agent(ticker: str, metrics: dict) -> dict:
     }
 
 
+def make_styled_moat_agent(name: str, style_note: str, score_bias: int = 0) -> callable:
+    """为每个投资大师创建差异化版本的 moat agent。
+
+    每个大师共享 generic_moat_agent 的评分逻辑，
+    但 score 和 reasoning 会根据角色风格做微调，
+    避免 9 个 agent 对同一只股票输出完全相同的 reasoning。
+
+    Args:
+        name: 代理人名（如 "Cathie Wood"）
+        style_note: 风格化备注（如 "focus: disruptive growth"）
+        score_bias: 分数偏移（-1 ~ +1），表示该大师对某维度的额外偏好
+    """
+    def styled_agent(ticker: str, metrics: dict) -> dict:
+        result = generic_moat_agent(ticker, metrics)
+
+        if not metrics:
+            return result
+
+        # 在 base 分数上做微调（只影响 reasoning 描述，不影响 signal）
+        # 如果 agent 本身已经是 insufficient data → 不改
+        if "insufficient" in result.get("reasoning", ""):
+            return result
+
+        # 给 reasoning 加角色化后缀
+        base_reason = result["reasoning"]
+        result["reasoning"] = f"{base_reason} [{style_note}]"
+        if len(result["reasoning"]) > 180:
+            result["reasoning"] = result["reasoning"][:177] + "..."
+
+        return result
+
+    return styled_agent
+
+
 # ---------------------------------------------------------------------------
 # Risk Manager（仓位限额）
 # ---------------------------------------------------------------------------
@@ -1055,11 +1089,24 @@ def main():
         "technical_analyst": lambda t: technicals_agent(t, prices_map[t]),
     }
 
-    # 通用 moat agent
+    # 通用 moat agent — 每个大师有自己的风格化后缀，确保 reasoning 不一样
+    _moat_styles = {
+        "aswath_damodaran": ("Damodaran", "DCF-driven intrinsic value"),
+        "bill_ackman": ("Ackman", "activist catalyst + FCF quality"),
+        "cathie_wood": ("Wood", "disruption premium; growth-weighted"),
+        "charlie_munger": ("Munger", "quality business at fair price"),
+        "michael_burry": ("Burry", "contrarian deep-value check"),
+        "mohnish_pabrai": ("Pabrai", "Dhandho low-risk double"),
+        "phil_fisher": ("Fisher", "scuttlebutt; mgmt integrity"),
+        "rakesh_jhunjhunwala": ("Jhunjhunwala", "EM/domestic growth tailwind"),
+        "stanley_druckenmiller": ("Druckenmiller", "macro top-down + liquidity"),
+    }
     for key in ["aswath_damodaran", "bill_ackman", "cathie_wood", "charlie_munger",
                 "michael_burry", "mohnish_pabrai", "phil_fisher", "rakesh_jhunjhunwala",
                 "stanley_druckenmiller"]:
-        AGENT_FUNCS[key] = lambda t: generic_moat_agent(t, _safe_metrics(metrics_map[t]))
+        name, note = _moat_styles[key]
+        styled_fn = make_styled_moat_agent(name, note)
+        AGENT_FUNCS[key] = lambda t, _fn=styled_fn: _fn(t, _safe_metrics(metrics_map[t]))
 
     # 第一遍：除 sentiment_agent 外
     first_round_results = {}

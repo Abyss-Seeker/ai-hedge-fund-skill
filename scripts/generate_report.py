@@ -23,7 +23,7 @@ except ImportError:
     HAS_FPDF = False
 
 
-def _safe_str(val, max_len=60):
+def _safe_str(val, max_len=200):
     s = str(val) if val is not None else "-"
     return s[:max_len]
 
@@ -46,7 +46,7 @@ def generate_html_report(data: dict, output_path: str) -> str:
             <td><strong>{d.get('action', '-').upper()}</strong></td>
             <td>{d.get('quantity', 0)}</td>
             <td>{d.get('confidence', 0)}%</td>
-            <td>{d.get('reasoning', '-')[:80]}</td>
+            <td>{d.get('reasoning', '-')[:150]}</td>
         </tr>"""
 
     # 信号矩阵
@@ -57,7 +57,7 @@ def generate_html_report(data: dict, output_path: str) -> str:
             s = signals.get(ak, {}).get(t, {})
             sig = s.get("signal", "-")
             conf = s.get("confidence", 0)
-            reason = s.get("reasoning", "-")[:60]
+            reason = s.get("reasoning", "-")[:150]
             color = {"bullish": "#22c55e", "bearish": "#ef4444", "neutral": "#94a3b8"}.get(sig, "#000")
             signal_rows += f"""
             <tr>
@@ -217,7 +217,7 @@ def generate_pdf_report(data: dict, output_path: str) -> str:
         d = decisions.get(t, {})
         summary_rows.append([
             t, d.get("action", "-").upper(), str(d.get("quantity", 0)),
-            f"{d.get('confidence', 0)}%", d.get("reasoning", "-")[:40]
+            f"{d.get('confidence', 0)}%", d.get("reasoning", "-")[:80]
         ])
     write_table(["股票", "操作", "数量", "置信度", "理由"], summary_rows,
                 [30, 20, 20, 20, pdf.w - 90])

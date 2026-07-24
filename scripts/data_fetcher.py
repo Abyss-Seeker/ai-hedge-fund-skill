@@ -148,12 +148,14 @@ def ticker_to_westock(ticker: str) -> str:
 # ---------------------------------------------------------------------------
 
 def _cache_key(kind: str, *parts: Any) -> str:
-    """生成缓存 key；parts 超过长度时用 hash 截断（避免 Windows 255 字符路径限制）。"""
+    """生成缓存 key；parts 超过长度时用 hash 截断（避免 Windows 255 字符路径限制）。
+    带 MM_DD_HH_MM 时间戳前缀，防止跨天/跨小时缓存撞车。"""
     import hashlib
+    ts = time.strftime("%m%d_%H%M")
     parts_str = "_".join(str(p) for p in parts)
-    if len(parts_str) > 100:
+    if len(parts_str) > 80:
         parts_str = hashlib.md5(parts_str.encode("utf-8")).hexdigest()
-    return f"{kind}__{parts_str}"
+    return f"{kind}_{ts}__{parts_str}"
 
 
 def _cache_get(key: str, ttl: int) -> Any | None:
