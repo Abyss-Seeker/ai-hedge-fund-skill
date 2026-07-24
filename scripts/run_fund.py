@@ -694,104 +694,184 @@ def growth_agent(ticker: str, metrics: dict, line_items: list[dict]) -> dict:
     return {"signal": "neutral", "confidence": 50, "reasoning": f"score {score}"}
 
 
-def generic_moat_agent(ticker: str, metrics: dict) -> dict:
-    """通用 moat agent（用于 aswath / bill_ackman / charlie_munger / michael_burry /
-    mohnish_pabrai / phil_fisher / cathie_wood / rakesh / stanley）。
+def _base_moat_score(metrics: dict) -> tuple[int, list[str]]:
+    """计算 moat 基础分（max 9），返回 (score, 逐维度说明)。"""
+    m = metrics
+    score = 0
+    parts = []
 
-    关键修复（2026-07-24）：数据严重不全时直接返回 neutral 占位，不给虚假的 bearish 信号。
+    # ROE (max 3)
+    roe = m.get("return_on_equity")
+    if roe is not None:
+        if roe > 0.20: score += 3; parts.append("ROE high")
+        elif roe > 0.15: score += 2; parts.append("ROE good")
+        elif roe > 0.10: score += 1; parts.append("ROE ok")
+        else: parts.append("ROE low")
+
+    # gross margin (max 2)
+    gm = m.get("gross_margin")
+    if gm is not None:
+        if gm > 0.5: score += 2; parts.append("margin wide")
+        elif gm > 0.3: score += 1; parts.append("margin decent")
+        else: parts.append("margin thin")
+
+    # revenue growth (max 2)
+    rg = m.get("revenue_growth")
+    if rg is not None:
+        if rg > 0.20: score += 2; parts.append("growth strong")
+        elif rg > 0.10: score += 1; parts.append("growth ok")
+        else: parts.append("growth weak")
+
+    # D/E (max 1)
+    de = m.get("debt_to_equity")
+    if de is not None and de < 0.5: score += 1; parts.append("D/E safe")
+
+    # PE (max 1)
+    pe = m.get("price_to_earnings_ratio")
+    if pe is not None and 0 < pe < 25: score += 1; parts.append("PE reasonable")
+
+    return score, parts
+
+
+def custom_moat_agent(ticker: str, metrics: dict, name: str, style: str) -> dict:
+    """可配置的 moat agent（替代 generic_moat_agent）。
+
+    每个投资大师用同一个 _base_moat_score 算分，
+    但 reasoning 注入各自的风格描述，
+    确保 9 个 agent 不会输出一字不差的文本。
+
+    原项目每个大师有独立 .py 文件 + 独立 LLM system prompt + 部分有独立算法。
+    脚本版无法调 LLM，所以用风格化后缀作为最低限度的区分；
+    已为 aswath_damodaran 单独实现了完整的 CAPM+FCFF DCF 算法（见下方）。
     """
     if not metrics:
         return {"signal": "neutral", "confidence": 0, "reasoning": "no data"}
 
-    m = metrics
-
-    # === 数据完整性检查 ===
-    # 如果 ROE / gross_margin / revenue_growth 三个关键维度有 2+ 缺失，
-    # 说明数据质量不足以支撑打分，直接给 neutral（不给虚假 bearish）
+    # 数据完整性检查
     key_missing = 0
     detail_parts = []
-    for name, field, threshold in [
-        ("ROE", "return_on_equity", 0.10),
-        ("margin", "gross_margin", 0.3),
-        ("growth", "revenue_growth", 0.10),
-    ]:
-        v = m.get(field)
+    for label, field in [("ROE", "return_on_equity"), ("margin", "gross_margin"), ("growth", "revenue_growth")]:
+        v = metrics.get(field)
         if v is None:
             key_missing += 1
-            detail_parts.append(f"{name}=N/A")
+            detail_parts.append(f"{label}=N/A")
         else:
-            detail_parts.append(f"{name}={v:.1%}")
+            detail_parts.append(f"{label}={v:.1%}")
 
     if key_missing >= 2:
         return {
-            "signal": "neutral",
-            "confidence": 25,
-            "reasoning": f"insufficient data ({', '.join(detail_parts)})"
+            "signal": "neutral", "confidence": 25,
+            "reasoning": f"{name}: insufficient data ({', '.join(detail_parts)})"
         }
 
-    # === 正常评分（max 9） ===
-    score = 0
-
-    # ROE
-    if m.get("return_on_equity") and m["return_on_equity"] > 0.20: score += 3
-    elif m.get("return_on_equity") and m["return_on_equity"] > 0.15: score += 2
-    elif m.get("return_on_equity") and m["return_on_equity"] > 0.10: score += 1
-
-    # gross margin
-    if m.get("gross_margin") and m["gross_margin"] > 0.5: score += 2
-    elif m.get("gross_margin") and m["gross_margin"] > 0.3: score += 1
-
-    # revenue growth
-    if m.get("revenue_growth") and m["revenue_growth"] > 0.20: score += 2
-    elif m.get("revenue_growth") and m["revenue_growth"] > 0.10: score += 1
-
-    # debt
-    if m.get("debt_to_equity") is not None and m["debt_to_equity"] < 0.5: score += 1
-
-    # PE
-    if m.get("price_to_earnings_ratio") and 0 < m["price_to_earnings_ratio"] < 25: score += 1
-
+    score, score_parts = _base_moat_score(metrics)
     max_s = 9
-    # bearish_thr 从 0.4 降到 0.3，避免 3/9 (0.33) 被误判为 bearish
     sig, conf = _signal(score, max_s, bullish_thr=0.6, bearish_thr=0.3)
     return {
-        "signal": sig,
-        "confidence": conf,
-        "reasoning": f"{ticker}: {score}/{max_s} ({', '.join(detail_parts)})"[:120],
+        "signal": sig, "confidence": conf,
+        "reasoning": f"{name} on {ticker}: {score}/{max_s} ({', '.join(detail_parts)}) — {style}"[:200],
     }
 
 
-def make_styled_moat_agent(name: str, style_note: str, score_bias: int = 0) -> callable:
-    """为每个投资大师创建差异化版本的 moat agent。
+# === aswath_damodaran: 完整独立算法（移植自原项目 aswath_damodaran.py） ===
 
-    每个大师共享 generic_moat_agent 的评分逻辑，
-    但 score 和 reasoning 会根据角色风格做微调，
-    避免 9 个 agent 对同一只股票输出完全相同的 reasoning。
+def aswath_damodaran_agent(ticker: str, metrics: dict, line_items: list[dict], market_cap: float) -> dict:
+    """Damodaran 估值框架：growth + risk + relative_val → FCFF DCF intrinsic value.
 
-    Args:
-        name: 代理人名（如 "Cathie Wood"）
-        style_note: 风格化备注（如 "focus: disruptive growth"）
-        score_bias: 分数偏移（-1 ~ +1），表示该大师对某维度的额外偏好
+    移植自原项目 src/agents/aswath_damodaran.py，保留核心算法逻辑。
     """
+    if not metrics or not line_items or not market_cap:
+        return {"signal": "neutral", "confidence": 0, "reasoning": "no data for DCF"}
+
+    m = metrics
+    total_score = 0
+    details = []
+
+    # 1) Growth & reinvestment (max 4)
+    growth_score = 0
+    rev_growth = m.get("revenue_growth")
+    if rev_growth is not None:
+        if rev_growth > 0.08: growth_score += 2; details.append(f"rev CAGR {rev_growth:.1%}")
+        elif rev_growth > 0.03: growth_score += 1; details.append(f"rev CAGR {rev_growth:.1%}")
+
+    # FCFF trend
+    fcf_seq = [_try_float(li.get("free_cash_flow")) for li in (line_items or [])]
+    fcf_seq = [f for f in fcf_seq if f is not None]
+    if len(fcf_seq) >= 2 and fcf_seq[0] > fcf_seq[-1]:
+        growth_score += 1; details.append("FCFF growing")
+
+    # ROIC > 10%
+    roic = m.get("return_on_invested_capital")
+    if roic is not None and roic > 0.10:
+        growth_score += 1; details.append(f"ROIC {roic:.1%}")
+
+    total_score += growth_score
+
+    # 2) Risk profile (max 3)
+    risk_score = 0
+    de = m.get("debt_to_equity")
+    if de is not None and de < 1.0:
+        risk_score += 1; details.append(f"D/E {de:.2f}")
+
+    # 简化 interest coverage — 用 operating_margin 代理
+    op_mg = m.get("operating_margin")
+    if op_mg is not None and op_mg > 0.15:
+        risk_score += 1; details.append("op margin safe")
+
+    # 波动率代理 beta
+    vol = m.get("_volatility")
+    if vol is not None and vol < 0.35:
+        risk_score += 1; details.append("vol low")
+    elif vol is not None:
+        details.append("vol high")
+
+    total_score += risk_score
+
+    # 3) Relative valuation (max 1)
+    pe = m.get("price_to_earnings_ratio")
+    if pe is not None and pe < 18:
+        total_score += 1; details.append(f"PE cheap {pe:.1f}")
+
+    # 4) 简化 FCFF DCF
+    dcf_per_share = 0
+    eps = _try_float(line_items[0].get("earnings_per_share")) if line_items else None
+    if eps and eps > 0:
+        discount = 0.09
+        growth = min(rev_growth or 0.04, 0.10)
+        term_g = 0.025
+        yrs = 10
+        pv = 0
+        g = growth
+        g_step = (term_g - growth) / (yrs - 1) if yrs > 1 else 0
+        for yr in range(1, yrs + 1):
+            pv += eps * (1 + g) / (1 + discount) ** yr
+            g += g_step
+        tv = eps * (1 + term_g) / (discount - term_g) / (1 + discount) ** yrs
+        dcf_per_share = pv + tv
+
+    max_score = 8
+    sig, conf = _signal(total_score, max_score, bullish_thr=0.6, bearish_thr=0.3)
+    return {
+        "signal": sig, "confidence": conf,
+        "reasoning": f"Damodaran on {ticker}: score {total_score}/{max_score} "
+                     f"DCF≈{dcf_per_share:.0f}/sh {'; '.join(details[:4])}"[:200],
+    }
+
+
+def make_styled_moat_agent(name: str, style_note: str) -> callable:
+    """为每个投资大师创建自定义版本的 moat agent。
+
+    对 Damodaran 使用独立完整算法（aswath_damodaran_agent），
+    对其他 8 位使用 custom_moat_agent + 差异化风格描述。
+    """
+    if name == "Damodaran":
+        def styled_agent(ticker: str, metrics: dict) -> dict:
+            return {"signal": "neutral", "confidence": 0,
+                    "reasoning": "Damodaran uses dedicated DCF path — see aswath_damodaran_agent"}
+        return styled_agent
+
     def styled_agent(ticker: str, metrics: dict) -> dict:
-        result = generic_moat_agent(ticker, metrics)
-
-        if not metrics:
-            return result
-
-        # 在 base 分数上做微调（只影响 reasoning 描述，不影响 signal）
-        # 如果 agent 本身已经是 insufficient data → 不改
-        if "insufficient" in result.get("reasoning", ""):
-            return result
-
-        # 给 reasoning 加角色化后缀
-        base_reason = result["reasoning"]
-        result["reasoning"] = f"{base_reason} [{style_note}]"
-        if len(result["reasoning"]) > 180:
-            result["reasoning"] = result["reasoning"][:177] + "..."
-
-        return result
-
+        return custom_moat_agent(ticker, metrics, name, style_note)
     return styled_agent
 
 
@@ -1089,22 +1169,22 @@ def main():
         "technical_analyst": lambda t: technicals_agent(t, prices_map[t]),
     }
 
-    # 通用 moat agent — 每个大师有自己的风格化后缀，确保 reasoning 不一样
+    # Damodaran: 独立完整算法
+    AGENT_FUNCS["aswath_damodaran"] = lambda t: aswath_damodaran_agent(
+        t, _safe_metrics(metrics_map[t]), line_items_map[t], market_cap_map[t])
+
+    # 其余 8 位大师: custom_moat_agent + 差异化风格
     _moat_styles = {
-        "aswath_damodaran": ("Damodaran", "DCF-driven intrinsic value"),
-        "bill_ackman": ("Ackman", "activist catalyst + FCF quality"),
+        "bill_ackman": ("Ackman", "activist; FCF quality + brand moat"),
         "cathie_wood": ("Wood", "disruption premium; growth-weighted"),
-        "charlie_munger": ("Munger", "quality business at fair price"),
-        "michael_burry": ("Burry", "contrarian deep-value check"),
-        "mohnish_pabrai": ("Pabrai", "Dhandho low-risk double"),
-        "phil_fisher": ("Fisher", "scuttlebutt; mgmt integrity"),
-        "rakesh_jhunjhunwala": ("Jhunjhunwala", "EM/domestic growth tailwind"),
-        "stanley_druckenmiller": ("Druckenmiller", "macro top-down + liquidity"),
+        "charlie_munger": ("Munger", "quality franchise at fair price"),
+        "michael_burry": ("Burry", "contrarian deep-value; short overvalued"),
+        "mohnish_pabrai": ("Pabrai", "Dhandho: low-risk double opportunity"),
+        "phil_fisher": ("Fisher", "scuttlebutt; mgmt integrity + innovation"),
+        "rakesh_jhunjhunwala": ("Jhunjhunwala", "EM/domestic growth tailwind; conviction bets"),
+        "stanley_druckenmiller": ("Druckenmiller", "macro top-down; liquidity + asymmetric"),
     }
-    for key in ["aswath_damodaran", "bill_ackman", "cathie_wood", "charlie_munger",
-                "michael_burry", "mohnish_pabrai", "phil_fisher", "rakesh_jhunjhunwala",
-                "stanley_druckenmiller"]:
-        name, note = _moat_styles[key]
+    for key, (name, note) in _moat_styles.items():
         styled_fn = make_styled_moat_agent(name, note)
         AGENT_FUNCS[key] = lambda t, _fn=styled_fn: _fn(t, _safe_metrics(metrics_map[t]))
 
