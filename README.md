@@ -3,6 +3,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
 
+**此项目为AI辅助生成，仅作学习探讨使用，不可作为投资参考。**
+
 > **复现 [virattt/ai-hedge-fund](https://github.com/virattt/ai-hedge-fund) 的 19-agent 投资分析框架**，
 > 用 WorkBuddy 内置的免费金融数据 skill 替代原项目的付费 `financial-datasets.ai` API。
 
