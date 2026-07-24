@@ -216,7 +216,7 @@ AI 会用 LLM 给每个 agent 写风格化推理，输出完整 JSON。
 1. **选对 agent**：至少选 `fundamentals_analyst` + `technical_analyst` + `valuation_analyst` + 2 位大师（warren_buffett, peter_lynch）
 2. **数据够多**：日期范围至少 90 天（finance 需要多期对比，kline 需要 30 根 bar）
 3. **不跑 A 股 valuation**：A 股 finance 字段不如港股 / 美股全，valuation 的 DCF 依赖 EPS → 缺 EPS 时走简化 DCF
-4. **自定义阈值**：编辑 `run_fund.py` 里的 `_signal()` 函数，调 bullish_thr / bearish_thr 到自己想要的范围
+4. **自定义阈值**：编辑 `scripts/analysts.py` 里的 `_signal()` 函数，调 bullish_thr / bearish_thr 到自己想要的范围
 
 ### 如何让 AI 模式更精确
 
@@ -299,7 +299,7 @@ python scripts/run_fund.py --ticker AAPL,MSFT --analysts warren_buffett,fundamen
 
 Fork → 改代码 → 开 PR。请保持 PR 小而专注。
 
-- 想加新的 agent？在 `run_fund.py` 的 `AGENT_FUNCS` 里注册新函数 + 在 `references/agent-roles.md` 加角色卡
+- 想加新的 agent？在 `scripts/analysts.py` 的 `AGENT_REGISTRY` 里注册新函数 + 在 `references/agent-roles.md` 加角色卡
 - 想换数据源？改 `data_fetcher.py` 的 6 个 `get_*` 函数（接口签名别动），已有的函数名跟原项目 `src/tools/api.py` 一致
 - 发现 A 股 / 美股字段覆盖不全？改 `data_fetcher.py` 里的 `get_financial_metrics` 字段映射表
 
