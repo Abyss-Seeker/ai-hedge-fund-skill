@@ -13,7 +13,7 @@
 19 个 AI 代理并行分析一只股票：Warren Buffett 算内在价值，Peter Lynch 看 PEG 十倍股，Nassim Taleb 测反脆弱性……最后 Risk Manager 控仓位，Portfolio Manager 拍板下单 —— 整个流程在 WorkBuddy 里一句话跑完。
 
 ```
-"用 ai-hedge-fund 帮我看看 腾讯、茅台、苹果 现在该不该买"
+"用 AI对冲基金智囊团 帮我看看 腾讯、茅台、苹果 现在该不该买"
 ```
 
 ---
@@ -53,7 +53,7 @@
 直接在 WorkBuddy 对话里说：
 
 ```
-帮我安装 ai-hedge-fund skill
+帮我安装 AI对冲基金智囊团 skill
 ```
 
 或者手动 clone 到 WorkBuddy 的 skills 目录：
@@ -62,7 +62,7 @@
 git clone https://github.com/virattt/ai-hedge-fund-skill.git ~/.workbuddy/skills/ai-hedge-fund/
 ```
 
-装完后下次对话说 "用 ai-hedge-fund 跑" 即可触发。
+装完后下次对话说 "用 AI对冲基金智囊团 跑" 即可触发。
 
 ### 方式 B：独立 Python 脚本（不需要 WorkBuddy）
 
@@ -116,7 +116,7 @@ FINAL TRADING DECISIONS
 在 WorkBuddy 对话中：
 
 ```
-用 ai-hedge-fund 分析 00700.HK,600519.SH,AAPL，
+用 AI对冲基金智囊团 分析 00700.HK,600519.SH,AAPL，
 日期 2026-04-01 ~ 2026-07-24，初始资金 100 万，
 选 warren_buffett, peter_lynch, nassim_taleb, cathie_wood
 + fundamentals, technicals, valuation

@@ -1,9 +1,9 @@
 ---
-name: ai-hedge-fund
+name: AI对冲基金智囊团
 summary: 复现 virattt/ai-hedge-fund 的多 agent AI 投资分析流程。用 WorkBuddy 自带的金融数据 skill（westock-data + neodata）替代原项目的 financial-datasets API。
 read_when:
   - 用户想跑多 agent AI 投资分析（仿对冲基金流程）
-  - 用户提到 ai-hedge-fund / 对冲基金 / 多 agent 投资
+  - 用户提到 AI对冲基金智囊团 / ai-hedge-fund / 对冲基金 / 多 agent 投资
   - 用户想选 19 个投资大师 / 估值模型 + 自动汇总决策
 ---
 
@@ -141,7 +141,7 @@ python generate_report.py --input results/run_xxx.json --output results/report_x
 
 ### 5.1 触发词
 
-- "跑一下 ai-hedge-fund"
+- "跑一下 AI对冲基金智囊团"
 - "AI 对冲基金分析"
 - "对冲基金流程跑 X / Y / Z"
 - "用 virattt 那个多 agent 框架分析"
@@ -151,7 +151,7 @@ python generate_report.py --input results/run_xxx.json --output results/report_x
 直接对 WorkBuddy 说：
 
 ```
-用 ai-hedge-fund 分析 00700.HK,600519.SH,AAPL，生成 PDF 报告
+用 AI对冲基金智囊团 分析 00700.HK,600519.SH,AAPL，生成 PDF 报告
 ```
 
 ### 5.3 命令行脚本模式（无 LLM，无 PDF）
