@@ -23,3 +23,4 @@ results/*.json
 # OS
 .DS_Store
 Thumbs.db
+_original/

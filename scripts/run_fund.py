@@ -1148,45 +1148,37 @@ def main():
     print(f"\nStep 2: 跑 {len(selected)} analyst agents")
     analyst_signals: dict[str, dict] = {"_tickers": tickers}
 
-    AGENT_FUNCS = {
-        "warren_buffett": lambda t: warren_buffett_agent(t, _safe_metrics(metrics_map[t]),
-                                                         line_items_map[t], market_cap_map[t]),
-        "ben_graham": lambda t: ben_graham_agent(t, _safe_metrics(metrics_map[t]),
-                                                  line_items_map[t], market_cap_map[t]),
-        "peter_lynch": lambda t: peter_lynch_agent(t, _safe_metrics(metrics_map[t]),
-                                                    line_items_map[t], market_cap_map[t],
-                                                    news_map[t]),
-        "nassim_taleb": lambda t: nassim_taleb_agent(t, _safe_metrics(metrics_map[t]),
-                                                      line_items_map[t], market_cap_map[t],
-                                                      prices_map[t]),
-        "fundamentals_analyst": lambda t: fundamentals_agent(t, _safe_metrics(metrics_map[t])),
-        "growth_analyst": lambda t: growth_agent(t, _safe_metrics(metrics_map[t]),
-                                                  line_items_map[t]),
-        "valuation_analyst": lambda t: valuation_agent(t, _safe_metrics(metrics_map[t]),
-                                                        line_items_map[t], market_cap_map[t]),
-        "news_sentiment_analyst": lambda t: news_sentiment_agent(t, news_map[t]),
-        "sentiment_analyst": lambda t: sentiment_agent(t, {}),  # 先跑空，后面回填
-        "technical_analyst": lambda t: technicals_agent(t, prices_map[t]),
-    }
+    # 从 analysts.py 导入所有 agent 的独立算法
+    from analysts import AGENT_REGISTRY
 
-    # Damodaran: 独立完整算法
-    AGENT_FUNCS["aswath_damodaran"] = lambda t: aswath_damodaran_agent(
-        t, _safe_metrics(metrics_map[t]), line_items_map[t], market_cap_map[t])
-
-    # 其余 8 位大师: custom_moat_agent + 差异化风格
-    _moat_styles = {
-        "bill_ackman": ("Ackman", "activist; FCF quality + brand moat"),
-        "cathie_wood": ("Wood", "disruption premium; growth-weighted"),
-        "charlie_munger": ("Munger", "quality franchise at fair price"),
-        "michael_burry": ("Burry", "contrarian deep-value; short overvalued"),
-        "mohnish_pabrai": ("Pabrai", "Dhandho: low-risk double opportunity"),
-        "phil_fisher": ("Fisher", "scuttlebutt; mgmt integrity + innovation"),
-        "rakesh_jhunjhunwala": ("Jhunjhunwala", "EM/domestic growth tailwind; conviction bets"),
-        "stanley_druckenmiller": ("Druckenmiller", "macro top-down; liquidity + asymmetric"),
-    }
-    for key, (name, note) in _moat_styles.items():
-        styled_fn = make_styled_moat_agent(name, note)
-        AGENT_FUNCS[key] = lambda t, _fn=styled_fn: _fn(t, _safe_metrics(metrics_map[t]))
+    AGENT_FUNCS = {}
+    for key, fn in AGENT_REGISTRY.items():
+        # 为每个 agent 创建适配 lambda，注入当前 ticker 的数据
+        if key in ("warren_buffett", "ben_graham", "aswath_damodaran", "bill_ackman",
+                    "cathie_wood", "charlie_munger", "michael_burry", "mohnish_pabrai",
+                    "phil_fisher", "rakesh_jhunjhunwala", "stanley_druckenmiller"):
+            AGENT_FUNCS[key] = lambda t, _fn=fn: _fn(
+                t, _safe_metrics(metrics_map[t]), line_items_map[t], market_cap_map[t],
+                prices=prices_map.get(t), news=news_map.get(t))
+        elif key == "peter_lynch":
+            AGENT_FUNCS[key] = lambda t, _fn=fn: _fn(
+                t, _safe_metrics(metrics_map[t]), line_items_map[t], market_cap_map[t],
+                prices=prices_map.get(t), news=news_map.get(t))
+        elif key == "nassim_taleb":
+            AGENT_FUNCS[key] = lambda t, _fn=fn: _fn(
+                t, _safe_metrics(metrics_map[t]), line_items_map[t], market_cap_map[t],
+                prices=prices_map.get(t))
+        elif key == "technical_analyst":
+            AGENT_FUNCS[key] = lambda t, _fn=fn: _fn(
+                t, prices=prices_map.get(t))
+        elif key == "news_sentiment_analyst":
+            AGENT_FUNCS[key] = lambda t, _fn=fn: _fn(t, news=news_map.get(t))
+        elif key == "sentiment_analyst":
+            AGENT_FUNCS[key] = lambda t, _fn=fn: _fn(t, other_signals={})  # 后面回填
+        else:
+            AGENT_FUNCS[key] = lambda t, _fn=fn: _fn(
+                t, metrics=_safe_metrics(metrics_map[t]), line_items=line_items_map.get(t),
+                market_cap=market_cap_map.get(t), prices=prices_map.get(t))
 
     # 第一遍：除 sentiment_agent 外
     first_round_results = {}
