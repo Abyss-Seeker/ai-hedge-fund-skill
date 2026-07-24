@@ -83,8 +83,11 @@ def _safe_metrics(metrics: list[dict]) -> dict | None:
     return metrics[0] if metrics else None
 
 
-def _signal(bullish_score: float, max_score: float, bullish_thr: float = 0.6, bearish_thr: float = 0.4):
-    """根据得分比例返回 signal + confidence."""
+def _signal(bullish_score: float, max_score: float, bullish_thr: float = 0.6, bearish_thr: float = 0.33):
+    """根据得分比例返回 signal + confidence.
+
+    默认 bearish_thr=0.33（原 0.4 太敏感，A 股数据不全时 3/9=0.33 刚好被卡成 bearish）。
+    """
     if max_score <= 0:
         return "neutral", 0
     ratio = bullish_score / max_score
@@ -693,30 +696,69 @@ def growth_agent(ticker: str, metrics: dict, line_items: list[dict]) -> dict:
 
 def generic_moat_agent(ticker: str, metrics: dict) -> dict:
     """通用 moat agent（用于 aswath / bill_ackman / charlie_munger / michael_burry /
-    mohnish_pabrai / phil_fisher / cathie_wood / rakesh / stanley）。"""
+    mohnish_pabrai / phil_fisher / cathie_wood / rakesh / stanley）。
+
+    关键修复（2026-07-24）：数据严重不全时直接返回 neutral 占位，不给虚假的 bearish 信号。
+    """
     if not metrics:
         return {"signal": "neutral", "confidence": 0, "reasoning": "no data"}
 
-    score = 0
     m = metrics
 
-    # 通用 moat 评分（看 ROE / margin / growth）
+    # === 数据完整性检查 ===
+    # 如果 ROE / gross_margin / revenue_growth 三个关键维度有 2+ 缺失，
+    # 说明数据质量不足以支撑打分，直接给 neutral（不给虚假 bearish）
+    key_missing = 0
+    detail_parts = []
+    for name, field, threshold in [
+        ("ROE", "return_on_equity", 0.10),
+        ("margin", "gross_margin", 0.3),
+        ("growth", "revenue_growth", 0.10),
+    ]:
+        v = m.get(field)
+        if v is None:
+            key_missing += 1
+            detail_parts.append(f"{name}=N/A")
+        else:
+            detail_parts.append(f"{name}={v:.1%}")
+
+    if key_missing >= 2:
+        return {
+            "signal": "neutral",
+            "confidence": 25,
+            "reasoning": f"insufficient data ({', '.join(detail_parts)})"
+        }
+
+    # === 正常评分（max 9） ===
+    score = 0
+
+    # ROE
     if m.get("return_on_equity") and m["return_on_equity"] > 0.20: score += 3
     elif m.get("return_on_equity") and m["return_on_equity"] > 0.15: score += 2
     elif m.get("return_on_equity") and m["return_on_equity"] > 0.10: score += 1
 
+    # gross margin
     if m.get("gross_margin") and m["gross_margin"] > 0.5: score += 2
     elif m.get("gross_margin") and m["gross_margin"] > 0.3: score += 1
 
+    # revenue growth
     if m.get("revenue_growth") and m["revenue_growth"] > 0.20: score += 2
     elif m.get("revenue_growth") and m["revenue_growth"] > 0.10: score += 1
 
+    # debt
     if m.get("debt_to_equity") is not None and m["debt_to_equity"] < 0.5: score += 1
+
+    # PE
     if m.get("price_to_earnings_ratio") and 0 < m["price_to_earnings_ratio"] < 25: score += 1
 
     max_s = 9
-    sig, conf = _signal(score, max_s, bullish_thr=0.6, bearish_thr=0.4)
-    return {"signal": sig, "confidence": conf, "reasoning": f"{score}/{max_s}"[:120]}
+    # bearish_thr 从 0.4 降到 0.3，避免 3/9 (0.33) 被误判为 bearish
+    sig, conf = _signal(score, max_s, bullish_thr=0.6, bearish_thr=0.3)
+    return {
+        "signal": sig,
+        "confidence": conf,
+        "reasoning": f"{ticker}: {score}/{max_s} ({', '.join(detail_parts)})"[:120],
+    }
 
 
 # ---------------------------------------------------------------------------

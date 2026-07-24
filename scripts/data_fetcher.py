@@ -574,8 +574,8 @@ def get_financial_metrics(
                 if tl and ta and ta > 0:
                     da = tl / ta
 
-        # Growth
-        rev_g = _try_float(r.get("OperatingRevenueGr1y") or r.get("OperatingRevenueTTM"))
+        # Growth — 只拿 YoY 字段，不能把 TTM 绝对值当增长率
+        rev_g = _try_float(r.get("OperatingRevenueGr1y"))
         eg = _try_float(r.get("NetProfitGr1y") or r.get("NpParentCompanyGr1y"))
         bg = _try_float(r.get("TotalAssetGr1y"))
 
