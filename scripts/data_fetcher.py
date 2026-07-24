@@ -411,7 +411,7 @@ def get_financial_metrics(
         first_row = tbl[0] if tbl else {}
         keys = set(first_row.keys())
         # 利润表特征：含 BasicEPS 或 OperatingRevenue 或 OperatingIncome
-        if not income_table and ({"BasicEPS", "EPS"} & keys) and (
+        if not income_table and ({"BasicEPS", "BasicEPS_Q", "EPS"} & keys) and (
             {"OperatingRevenue", "OperatingIncome"} & keys or "NetProfit" in keys or "ProfitToShareholders" in keys
         ):
             income_table = tbl
@@ -461,7 +461,7 @@ def get_financial_metrics(
         # A 股 lrb:  无毛利率字段，需从营收+营业利润算
         # 美股 income: GrossMargin=毛利率%
         gross_margin = None
-        for k in ["GrossIncomeRatio", "GrossMargin"]:
+        for k in ["GrossIncomeRatio", "GrossMargin", "GrossMargin_Q"]:
             v = _try_float(r.get(k))
             if v is not None:
                 gross_margin = v / 100
@@ -473,7 +473,7 @@ def get_financial_metrics(
                 gross_margin = op_profit / rev  # 近似
 
         op_margin = None
-        for k in ["OperatingProfitRatio", "OperatingMargin"]:
+        for k in ["OperatingProfitRatio", "OperatingMargin", "OperatingMargin_Q"]:
             v = _try_float(r.get(k))
             if v is not None:
                 op_margin = v / 100
@@ -485,7 +485,7 @@ def get_financial_metrics(
                 op_margin = op_profit / rev
 
         net_margin = None
-        for k in ["NetProfitRatio", "NetMargin"]:
+        for k in ["NetProfitRatio", "NetMargin", "NetMargin_Q"]:
             v = _try_float(r.get(k))
             if v is not None:
                 net_margin = v / 100
@@ -617,8 +617,8 @@ def get_financial_metrics(
             "ebitda_growth": None,
             "payout_ratio": None,
             # === 每股数据 ===
-            "earnings_per_share": _try_float(r.get("BasicEPS", r.get("EPS"))),
-            "book_value_per_share": _try_float(r.get("NetAssetPS")),
+            "earnings_per_share": _try_float(r.get("BasicEPS") or r.get("BasicEPS_Q") or r.get("EPS")),
+            "book_value_per_share": _try_float(r.get("NetAssetPS") or r.get("BPS")),
             "free_cash_flow_per_share": _try_float(r.get("CashflowPS", r.get("OperCashFlowPS"))),
             # 原始字段保留
             "_raw": r,

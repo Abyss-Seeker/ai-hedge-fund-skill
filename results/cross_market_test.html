@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>AI Hedge Fund 分析报告</title>
+<style>
+    body { font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif; max-width: 900px; margin: auto; padding: 20px; color: #1e293b; }
+    h1 { text-align: center; font-size: 28px; margin-bottom: 5px; }
+    .subtitle { text-align: center; color: #64748b; margin-bottom: 30px; }
+    h2 { border-bottom: 2px solid #e2e8f0; padding-bottom: 5px; margin-top: 30px; }
+    table { width: 100%; border-collapse: collapse; margin: 10px 0 20px; }
+    th, td { border: 1px solid #e2e8f0; padding: 8px 12px; text-align: left; }
+    th { background: #f1f5f9; font-weight: 600; }
+    .disclaimer { background: #fef3c7; border: 1px solid #f59e0b; padding: 15px; margin-top: 30px; border-radius: 6px; font-size: 13px; color: #92400e; }
+    .footer { text-align: center; color: #94a3b8; font-size: 12px; margin-top: 30px; }
+</style>
+</head>
+<body>
+
+<h1>AI Hedge Fund 分析报告</h1>
+<p class="subtitle">生成时间: 2026-07-24T23:45:50.354441 | 股票: 600519.SH, 000001.SZ, 00700.HK, 09988.HK, AAPL, MSFT</p>
+
+<h2>一、最终决策摘要</h2>
+<table>
+    <tr><th>股票</th><th>操作</th><th>数量</th><th>置信度</th><th>理由</th></tr>
+    
+        <tr>
+            <td>600519.SH</td>
+            <td><strong>HOLD</strong></td>
+            <td>0</td>
+            <td>47%</td>
+            <td>mixed 2B/3Be/14N</td>
+        </tr>
+        <tr>
+            <td>000001.SZ</td>
+            <td><strong>SHORT</strong></td>
+            <td>18574</td>
+            <td>74%</td>
+            <td>14/19 bearish; short 18574</td>
+        </tr>
+        <tr>
+            <td>00700.HK</td>
+            <td><strong>HOLD</strong></td>
+            <td>0</td>
+            <td>45%</td>
+            <td>mixed 1B/3Be/15N</td>
+        </tr>
+        <tr>
+            <td>09988.HK</td>
+            <td><strong>HOLD</strong></td>
+            <td>0</td>
+            <td>42%</td>
+            <td>mixed 0B/3Be/16N</td>
+        </tr>
+        <tr>
+            <td>AAPL</td>
+            <td><strong>HOLD</strong></td>
+            <td>0</td>
+            <td>34%</td>
+            <td>mixed 1B/7Be/11N</td>
+        </tr>
+        <tr>
+            <td>MSFT</td>
+            <td><strong>HOLD</strong></td>
+            <td>0</td>
+            <td>34%</td>
+            <td>mixed 0B/6Be/13N</td>
+        </tr>
+</table>
+
+<h2>二、分析师信号矩阵</h2>
+<table>
+    <tr><th>股票</th><th>分析师</th><th>信号</th><th>置信度</th><th>推理</th></tr>
+    
+            <tr>
+                <td>600519.SH</td>
+                <td>warren_buffett</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>50%</td>
+                <td style="font-size:12px">{"fundamentals": 6, "consistency": 0, "moat": 2, "management</td>
+            </tr>
+            <tr>
+                <td>600519.SH</td>
+                <td>ben_graham</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>40%</td>
+                <td style="font-size:12px">score 6/15 EPS 全正</td>
+            </tr>
+            <tr>
+                <td>600519.SH</td>
+                <td>peter_lynch</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>70%</td>
+                <td style="font-size:12px">total 3.0/10</td>
+            </tr>
+            <tr>
+                <td>600519.SH</td>
+                <td>nassim_taleb</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>74%</td>
+                <td style="font-size:12px">fragile 16/50</td>
+            </tr>
+            <tr>
+                <td>600519.SH</td>
+                <td>cathie_wood</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>44%</td>
+                <td style="font-size:12px">600519.SH: 4/9 (ROE=9.7%, margin=69.6%, growth=N/A)</td>
+            </tr>
+            <tr>
+                <td>600519.SH</td>
+                <td>charlie_munger</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>44%</td>
+                <td style="font-size:12px">600519.SH: 4/9 (ROE=9.7%, margin=69.6%, growth=N/A)</td>
+            </tr>
+            <tr>
+                <td>600519.SH</td>
+                <td>bill_ackman</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>44%</td>
+                <td style="font-size:12px">600519.SH: 4/9 (ROE=9.7%, margin=69.6%, growth=N/A)</td>
+            </tr>
+            <tr>
+                <td>600519.SH</td>
+                <td>michael_burry</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>44%</td>
+                <td style="font-size:12px">600519.SH: 4/9 (ROE=9.7%, margin=69.6%, growth=N/A)</td>
+            </tr>
+            <tr>
+                <td>600519.SH</td>
+                <td>mohnish_pabrai</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>44%</td>
+                <td style="font-size:12px">600519.SH: 4/9 (ROE=9.7%, margin=69.6%, growth=N/A)</td>
+            </tr>
+            <tr>
+                <td>600519.SH</td>
+                <td>phil_fisher</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>44%</td>
+                <td style="font-size:12px">600519.SH: 4/9 (ROE=9.7%, margin=69.6%, growth=N/A)</td>
+            </tr>
+            <tr>
+                <td>600519.SH</td>
+                <td>stanley_druckenmiller</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>44%</td>
+                <td style="font-size:12px">600519.SH: 4/9 (ROE=9.7%, margin=69.6%, growth=N/A)</td>
+            </tr>
+            <tr>
+                <td>600519.SH</td>
+                <td>aswath_damodaran</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>44%</td>
+                <td style="font-size:12px">600519.SH: 4/9 (ROE=9.7%, margin=69.6%, growth=N/A)</td>
+            </tr>
+            <tr>
+                <td>600519.SH</td>
+                <td>rakesh_jhunjhunwala</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>44%</td>
+                <td style="font-size:12px">600519.SH: 4/9 (ROE=9.7%, margin=69.6%, growth=N/A)</td>
+            </tr>
+            <tr>
+                <td>600519.SH</td>
+                <td>technical_analyst</td>
+                <td style="color:#22c55e;font-weight:bold">BULLISH</td>
+                <td>17%</td>
+                <td style="font-size:12px">trend=neutral mom=bullish mr=neutral vol=24.4%</td>
+            </tr>
+            <tr>
+                <td>600519.SH</td>
+                <td>fundamentals_analyst</td>
+                <td style="color:#22c55e;font-weight:bold">BULLISH</td>
+                <td>50%</td>
+                <td style="font-size:12px">2B/1Be/1N</td>
+            </tr>
+            <tr>
+                <td>600519.SH</td>
+                <td>growth_analyst</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>74%</td>
+                <td style="font-size:12px">score 0</td>
+            </tr>
+            <tr>
+                <td>600519.SH</td>
+                <td>valuation_analyst</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>50%</td>
+                <td style="font-size:12px">PE=19.6 PB=7.0 DCF_gap=0.0%</td>
+            </tr>
+            <tr>
+                <td>600519.SH</td>
+                <td>news_sentiment_analyst</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>45%</td>
+                <td style="font-size:12px">1B/0Be/9N</td>
+            </tr>
+            <tr>
+                <td>600519.SH</td>
+                <td>sentiment_analyst</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>50%</td>
+                <td style="font-size:12px">mixed</td>
+            </tr>
+            <tr>
+                <td>000001.SZ</td>
+                <td>warren_buffett</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>81%</td>
+                <td style="font-size:12px">{"fundamentals": 2, "consistency": 0, "moat": 2, "management</td>
+            </tr>
+            <tr>
+                <td>000001.SZ</td>
+                <td>ben_graham</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>73%</td>
+                <td style="font-size:12px">score 4/15 EPS 全正</td>
+            </tr>
+            <tr>
+                <td>000001.SZ</td>
+                <td>peter_lynch</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>76%</td>
+                <td style="font-size:12px">total 2.4/10</td>
+            </tr>
+            <tr>
+                <td>000001.SZ</td>
+                <td>nassim_taleb</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>83%</td>
+                <td style="font-size:12px">fragile 7/50</td>
+            </tr>
+            <tr>
+                <td>000001.SZ</td>
+                <td>cathie_wood</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>78%</td>
+                <td style="font-size:12px">000001.SZ: 2/9 (ROE=2.7%, margin=49.3%, growth=N/A)</td>
+            </tr>
+            <tr>
+                <td>000001.SZ</td>
+                <td>charlie_munger</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>78%</td>
+                <td style="font-size:12px">000001.SZ: 2/9 (ROE=2.7%, margin=49.3%, growth=N/A)</td>
+            </tr>
+            <tr>
+                <td>000001.SZ</td>
+                <td>bill_ackman</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>78%</td>
+                <td style="font-size:12px">000001.SZ: 2/9 (ROE=2.7%, margin=49.3%, growth=N/A)</td>
+            </tr>
+            <tr>
+                <td>000001.SZ</td>
+                <td>michael_burry</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>78%</td>
+                <td style="font-size:12px">000001.SZ: 2/9 (ROE=2.7%, margin=49.3%, growth=N/A)</td>
+            </tr>
+            <tr>
+                <td>000001.SZ</td>
+                <td>mohnish_pabrai</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>78%</td>
+                <td style="font-size:12px">000001.SZ: 2/9 (ROE=2.7%, margin=49.3%, growth=N/A)</td>
+            </tr>
+            <tr>
+                <td>000001.SZ</td>
+                <td>phil_fisher</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>78%</td>
+                <td style="font-size:12px">000001.SZ: 2/9 (ROE=2.7%, margin=49.3%, growth=N/A)</td>
+            </tr>
+            <tr>
+                <td>000001.SZ</td>
+                <td>stanley_druckenmiller</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>78%</td>
+                <td style="font-size:12px">000001.SZ: 2/9 (ROE=2.7%, margin=49.3%, growth=N/A)</td>
+            </tr>
+            <tr>
+                <td>000001.SZ</td>
+                <td>aswath_damodaran</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>78%</td>
+                <td style="font-size:12px">000001.SZ: 2/9 (ROE=2.7%, margin=49.3%, growth=N/A)</td>
+            </tr>
+            <tr>
+                <td>000001.SZ</td>
+                <td>rakesh_jhunjhunwala</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>78%</td>
+                <td style="font-size:12px">000001.SZ: 2/9 (ROE=2.7%, margin=49.3%, growth=N/A)</td>
+            </tr>
+            <tr>
+                <td>000001.SZ</td>
+                <td>technical_analyst</td>
+                <td style="color:#22c55e;font-weight:bold">BULLISH</td>
+                <td>23%</td>
+                <td style="font-size:12px">trend=bullish mom=bullish mr=bearish vol=18.8%</td>
+            </tr>
+            <tr>
+                <td>000001.SZ</td>
+                <td>fundamentals_analyst</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>50%</td>
+                <td style="font-size:12px">2B/2Be/0N</td>
+            </tr>
+            <tr>
+                <td>000001.SZ</td>
+                <td>growth_analyst</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>74%</td>
+                <td style="font-size:12px">score 0</td>
+            </tr>
+            <tr>
+                <td>000001.SZ</td>
+                <td>valuation_analyst</td>
+                <td style="color:#22c55e;font-weight:bold">BULLISH</td>
+                <td>80%</td>
+                <td style="font-size:12px">PE=5.0 PB=0.5 DCF_gap=0.0%</td>
+            </tr>
+            <tr>
+                <td>000001.SZ</td>
+                <td>news_sentiment_analyst</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>50%</td>
+                <td style="font-size:12px">0B/0Be/10N</td>
+            </tr>
+            <tr>
+                <td>000001.SZ</td>
+                <td>sentiment_analyst</td>
+                <td style="color:#22c55e;font-weight:bold">BULLISH</td>
+                <td>70%</td>
+                <td style="font-size:12px">contrarian: 78% bearish</td>
+            </tr>
+            <tr>
+                <td>00700.HK</td>
+                <td>warren_buffett</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>50%</td>
+                <td style="font-size:12px">{"fundamentals": 3, "consistency": 0, "moat": 2, "management</td>
+            </tr>
+            <tr>
+                <td>00700.HK</td>
+                <td>ben_graham</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>40%</td>
+                <td style="font-size:12px">score 6/15 EPS 全正</td>
+            </tr>
+            <tr>
+                <td>00700.HK</td>
+                <td>peter_lynch</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>66%</td>
+                <td style="font-size:12px">total 3.4/10</td>
+            </tr>
+            <tr>
+                <td>00700.HK</td>
+                <td>nassim_taleb</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>79%</td>
+                <td style="font-size:12px">fragile 11/50</td>
+            </tr>
+            <tr>
+                <td>00700.HK</td>
+                <td>cathie_wood</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>44%</td>
+                <td style="font-size:12px">00700.HK: 4/9 (ROE=5.2%, margin=56.6%, growth=14.1%)</td>
+            </tr>
+            <tr>
+                <td>00700.HK</td>
+                <td>charlie_munger</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>44%</td>
+                <td style="font-size:12px">00700.HK: 4/9 (ROE=5.2%, margin=56.6%, growth=14.1%)</td>
+            </tr>
+            <tr>
+                <td>00700.HK</td>
+                <td>bill_ackman</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>44%</td>
+                <td style="font-size:12px">00700.HK: 4/9 (ROE=5.2%, margin=56.6%, growth=14.1%)</td>
+            </tr>
+            <tr>
+                <td>00700.HK</td>
+                <td>michael_burry</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>44%</td>
+                <td style="font-size:12px">00700.HK: 4/9 (ROE=5.2%, margin=56.6%, growth=14.1%)</td>
+            </tr>
+            <tr>
+                <td>00700.HK</td>
+                <td>mohnish_pabrai</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>44%</td>
+                <td style="font-size:12px">00700.HK: 4/9 (ROE=5.2%, margin=56.6%, growth=14.1%)</td>
+            </tr>
+            <tr>
+                <td>00700.HK</td>
+                <td>phil_fisher</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>44%</td>
+                <td style="font-size:12px">00700.HK: 4/9 (ROE=5.2%, margin=56.6%, growth=14.1%)</td>
+            </tr>
+            <tr>
+                <td>00700.HK</td>
+                <td>stanley_druckenmiller</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>44%</td>
+                <td style="font-size:12px">00700.HK: 4/9 (ROE=5.2%, margin=56.6%, growth=14.1%)</td>
+            </tr>
+            <tr>
+                <td>00700.HK</td>
+                <td>aswath_damodaran</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>44%</td>
+                <td style="font-size:12px">00700.HK: 4/9 (ROE=5.2%, margin=56.6%, growth=14.1%)</td>
+            </tr>
+            <tr>
+                <td>00700.HK</td>
+                <td>rakesh_jhunjhunwala</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>44%</td>
+                <td style="font-size:12px">00700.HK: 4/9 (ROE=5.2%, margin=56.6%, growth=14.1%)</td>
+            </tr>
+            <tr>
+                <td>00700.HK</td>
+                <td>technical_analyst</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>0%</td>
+                <td style="font-size:12px">trend=neutral mom=neutral mr=neutral vol=41.0%</td>
+            </tr>
+            <tr>
+                <td>00700.HK</td>
+                <td>fundamentals_analyst</td>
+                <td style="color:#22c55e;font-weight:bold">BULLISH</td>
+                <td>50%</td>
+                <td style="font-size:12px">2B/0Be/2N</td>
+            </tr>
+            <tr>
+                <td>00700.HK</td>
+                <td>growth_analyst</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>69%</td>
+                <td style="font-size:12px">score 5</td>
+            </tr>
+            <tr>
+                <td>00700.HK</td>
+                <td>valuation_analyst</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>50%</td>
+                <td style="font-size:12px">PE=14.8 PB=3.1 DCF_gap=-71.5%</td>
+            </tr>
+            <tr>
+                <td>00700.HK</td>
+                <td>news_sentiment_analyst</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>35%</td>
+                <td style="font-size:12px">3B/0Be/7N</td>
+            </tr>
+            <tr>
+                <td>00700.HK</td>
+                <td>sentiment_analyst</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>50%</td>
+                <td style="font-size:12px">mixed</td>
+            </tr>
+            <tr>
+                <td>09988.HK</td>
+                <td>warren_buffett</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>79%</td>
+                <td style="font-size:12px">{"fundamentals": 0, "consistency": 3, "moat": 0, "management</td>
+            </tr>
+            <tr>
+                <td>09988.HK</td>
+                <td>ben_graham</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>47%</td>
+                <td style="font-size:12px">score 7/15 EPS 全正; EPS 增长</td>
+            </tr>
+            <tr>
+                <td>09988.HK</td>
+                <td>peter_lynch</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>50%</td>
+                <td style="font-size:12px">total 6.5/10</td>
+            </tr>
+            <tr>
+                <td>09988.HK</td>
+                <td>nassim_taleb</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>88%</td>
+                <td style="font-size:12px">fragile 2/50</td>
+            </tr>
+            <tr>
+                <td>09988.HK</td>
+                <td>cathie_wood</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>33%</td>
+                <td style="font-size:12px">09988.HK: 3/9 (ROE=10.2%, margin=39.8%, growth=7.4%)</td>
+            </tr>
+            <tr>
+                <td>09988.HK</td>
+                <td>charlie_munger</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>33%</td>
+                <td style="font-size:12px">09988.HK: 3/9 (ROE=10.2%, margin=39.8%, growth=7.4%)</td>
+            </tr>
+            <tr>
+                <td>09988.HK</td>
+                <td>bill_ackman</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>33%</td>
+                <td style="font-size:12px">09988.HK: 3/9 (ROE=10.2%, margin=39.8%, growth=7.4%)</td>
+            </tr>
+            <tr>
+                <td>09988.HK</td>
+                <td>michael_burry</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>33%</td>
+                <td style="font-size:12px">09988.HK: 3/9 (ROE=10.2%, margin=39.8%, growth=7.4%)</td>
+            </tr>
+            <tr>
+                <td>09988.HK</td>
+                <td>mohnish_pabrai</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>33%</td>
+                <td style="font-size:12px">09988.HK: 3/9 (ROE=10.2%, margin=39.8%, growth=7.4%)</td>
+            </tr>
+            <tr>
+                <td>09988.HK</td>
+                <td>phil_fisher</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>33%</td>
+                <td style="font-size:12px">09988.HK: 3/9 (ROE=10.2%, margin=39.8%, growth=7.4%)</td>
+            </tr>
+            <tr>
+                <td>09988.HK</td>
+                <td>stanley_druckenmiller</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>33%</td>
+                <td style="font-size:12px">09988.HK: 3/9 (ROE=10.2%, margin=39.8%, growth=7.4%)</td>
+            </tr>
+            <tr>
+                <td>09988.HK</td>
+                <td>aswath_damodaran</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>33%</td>
+                <td style="font-size:12px">09988.HK: 3/9 (ROE=10.2%, margin=39.8%, growth=7.4%)</td>
+            </tr>
+            <tr>
+                <td>09988.HK</td>
+                <td>rakesh_jhunjhunwala</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>33%</td>
+                <td style="font-size:12px">09988.HK: 3/9 (ROE=10.2%, margin=39.8%, growth=7.4%)</td>
+            </tr>
+            <tr>
+                <td>09988.HK</td>
+                <td>technical_analyst</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>6%</td>
+                <td style="font-size:12px">trend=neutral mom=bullish mr=neutral vol=50.3%</td>
+            </tr>
+            <tr>
+                <td>09988.HK</td>
+                <td>fundamentals_analyst</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>50%</td>
+                <td style="font-size:12px">1B/2Be/1N</td>
+            </tr>
+            <tr>
+                <td>09988.HK</td>
+                <td>growth_analyst</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>50%</td>
+                <td style="font-size:12px">score 10</td>
+            </tr>
+            <tr>
+                <td>09988.HK</td>
+                <td>valuation_analyst</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>50%</td>
+                <td style="font-size:12px">PE=17.6 PB=1.8 DCF_gap=-2.0%</td>
+            </tr>
+            <tr>
+                <td>09988.HK</td>
+                <td>news_sentiment_analyst</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>40%</td>
+                <td style="font-size:12px">2B/0Be/8N</td>
+            </tr>
+            <tr>
+                <td>09988.HK</td>
+                <td>sentiment_analyst</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>50%</td>
+                <td style="font-size:12px">mixed</td>
+            </tr>
+            <tr>
+                <td>AAPL</td>
+                <td>warren_buffett</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>79%</td>
+                <td style="font-size:12px">{"fundamentals": 4, "moat": 3, "management": 1, "pricing_pow</td>
+            </tr>
+            <tr>
+                <td>AAPL</td>
+                <td>ben_graham</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>93%</td>
+                <td style="font-size:12px">score 1/15 </td>
+            </tr>
+            <tr>
+                <td>AAPL</td>
+                <td>peter_lynch</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>83%</td>
+                <td style="font-size:12px">total 1.7/10</td>
+            </tr>
+            <tr>
+                <td>AAPL</td>
+                <td>nassim_taleb</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>88%</td>
+                <td style="font-size:12px">fragile 2/50</td>
+            </tr>
+            <tr>
+                <td>AAPL</td>
+                <td>cathie_wood</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>25%</td>
+                <td style="font-size:12px">insufficient data (ROE=141.5%, margin=N/A, growth=N/A)</td>
+            </tr>
+            <tr>
+                <td>AAPL</td>
+                <td>charlie_munger</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>25%</td>
+                <td style="font-size:12px">insufficient data (ROE=141.5%, margin=N/A, growth=N/A)</td>
+            </tr>
+            <tr>
+                <td>AAPL</td>
+                <td>bill_ackman</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>25%</td>
+                <td style="font-size:12px">insufficient data (ROE=141.5%, margin=N/A, growth=N/A)</td>
+            </tr>
+            <tr>
+                <td>AAPL</td>
+                <td>michael_burry</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>25%</td>
+                <td style="font-size:12px">insufficient data (ROE=141.5%, margin=N/A, growth=N/A)</td>
+            </tr>
+            <tr>
+                <td>AAPL</td>
+                <td>mohnish_pabrai</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>25%</td>
+                <td style="font-size:12px">insufficient data (ROE=141.5%, margin=N/A, growth=N/A)</td>
+            </tr>
+            <tr>
+                <td>AAPL</td>
+                <td>phil_fisher</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>25%</td>
+                <td style="font-size:12px">insufficient data (ROE=141.5%, margin=N/A, growth=N/A)</td>
+            </tr>
+            <tr>
+                <td>AAPL</td>
+                <td>stanley_druckenmiller</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>25%</td>
+                <td style="font-size:12px">insufficient data (ROE=141.5%, margin=N/A, growth=N/A)</td>
+            </tr>
+            <tr>
+                <td>AAPL</td>
+                <td>aswath_damodaran</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>25%</td>
+                <td style="font-size:12px">insufficient data (ROE=141.5%, margin=N/A, growth=N/A)</td>
+            </tr>
+            <tr>
+                <td>AAPL</td>
+                <td>rakesh_jhunjhunwala</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>25%</td>
+                <td style="font-size:12px">insufficient data (ROE=141.5%, margin=N/A, growth=N/A)</td>
+            </tr>
+            <tr>
+                <td>AAPL</td>
+                <td>technical_analyst</td>
+                <td style="color:#22c55e;font-weight:bold">BULLISH</td>
+                <td>51%</td>
+                <td style="font-size:12px">trend=bullish mom=bullish mr=neutral vol=27.9%</td>
+            </tr>
+            <tr>
+                <td>AAPL</td>
+                <td>fundamentals_analyst</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>75%</td>
+                <td style="font-size:12px">0B/3Be/1N</td>
+            </tr>
+            <tr>
+                <td>AAPL</td>
+                <td>growth_analyst</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>74%</td>
+                <td style="font-size:12px">score 0</td>
+            </tr>
+            <tr>
+                <td>AAPL</td>
+                <td>valuation_analyst</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>80%</td>
+                <td style="font-size:12px">PE=40.3 PB=45.9 DCF_gap=0.0%</td>
+            </tr>
+            <tr>
+                <td>AAPL</td>
+                <td>news_sentiment_analyst</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>50%</td>
+                <td style="font-size:12px">0B/0Be/10N</td>
+            </tr>
+            <tr>
+                <td>AAPL</td>
+                <td>sentiment_analyst</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>50%</td>
+                <td style="font-size:12px">mixed</td>
+            </tr>
+            <tr>
+                <td>MSFT</td>
+                <td>warren_buffett</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>79%</td>
+                <td style="font-size:12px">{"fundamentals": 4, "moat": 3, "management": 1, "pricing_pow</td>
+            </tr>
+            <tr>
+                <td>MSFT</td>
+                <td>ben_graham</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>93%</td>
+                <td style="font-size:12px">score 1/15 </td>
+            </tr>
+            <tr>
+                <td>MSFT</td>
+                <td>peter_lynch</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>80%</td>
+                <td style="font-size:12px">total 2.0/10</td>
+            </tr>
+            <tr>
+                <td>MSFT</td>
+                <td>nassim_taleb</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>85%</td>
+                <td style="font-size:12px">fragile 5/50</td>
+            </tr>
+            <tr>
+                <td>MSFT</td>
+                <td>cathie_wood</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>25%</td>
+                <td style="font-size:12px">insufficient data (ROE=34.4%, margin=N/A, growth=N/A)</td>
+            </tr>
+            <tr>
+                <td>MSFT</td>
+                <td>charlie_munger</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>25%</td>
+                <td style="font-size:12px">insufficient data (ROE=34.4%, margin=N/A, growth=N/A)</td>
+            </tr>
+            <tr>
+                <td>MSFT</td>
+                <td>bill_ackman</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>25%</td>
+                <td style="font-size:12px">insufficient data (ROE=34.4%, margin=N/A, growth=N/A)</td>
+            </tr>
+            <tr>
+                <td>MSFT</td>
+                <td>michael_burry</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>25%</td>
+                <td style="font-size:12px">insufficient data (ROE=34.4%, margin=N/A, growth=N/A)</td>
+            </tr>
+            <tr>
+                <td>MSFT</td>
+                <td>mohnish_pabrai</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>25%</td>
+                <td style="font-size:12px">insufficient data (ROE=34.4%, margin=N/A, growth=N/A)</td>
+            </tr>
+            <tr>
+                <td>MSFT</td>
+                <td>phil_fisher</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>25%</td>
+                <td style="font-size:12px">insufficient data (ROE=34.4%, margin=N/A, growth=N/A)</td>
+            </tr>
+            <tr>
+                <td>MSFT</td>
+                <td>stanley_druckenmiller</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>25%</td>
+                <td style="font-size:12px">insufficient data (ROE=34.4%, margin=N/A, growth=N/A)</td>
+            </tr>
+            <tr>
+                <td>MSFT</td>
+                <td>aswath_damodaran</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>25%</td>
+                <td style="font-size:12px">insufficient data (ROE=34.4%, margin=N/A, growth=N/A)</td>
+            </tr>
+            <tr>
+                <td>MSFT</td>
+                <td>rakesh_jhunjhunwala</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>25%</td>
+                <td style="font-size:12px">insufficient data (ROE=34.4%, margin=N/A, growth=N/A)</td>
+            </tr>
+            <tr>
+                <td>MSFT</td>
+                <td>technical_analyst</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>8%</td>
+                <td style="font-size:12px">trend=bearish mom=bullish mr=neutral vol=33.6%</td>
+            </tr>
+            <tr>
+                <td>MSFT</td>
+                <td>fundamentals_analyst</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>50%</td>
+                <td style="font-size:12px">0B/2Be/2N</td>
+            </tr>
+            <tr>
+                <td>MSFT</td>
+                <td>growth_analyst</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>74%</td>
+                <td style="font-size:12px">score 0</td>
+            </tr>
+            <tr>
+                <td>MSFT</td>
+                <td>valuation_analyst</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>50%</td>
+                <td style="font-size:12px">PE=22.9 PB=6.9 DCF_gap=0.0%</td>
+            </tr>
+            <tr>
+                <td>MSFT</td>
+                <td>news_sentiment_analyst</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>45%</td>
+                <td style="font-size:12px">1B/0Be/9N</td>
+            </tr>
+            <tr>
+                <td>MSFT</td>
+                <td>sentiment_analyst</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>50%</td>
+                <td style="font-size:12px">mixed</td>
+            </tr>
+</table>
+
+<h2>三、风险与仓位数据</h2>
+<table>
+    <tr><th>股票</th><th>当前价格</th><th>仓位上限</th><th>年化波动率</th><th>数据天数</th></tr>
+    
+        <tr>
+            <td>600519.SH</td>
+            <td>1297.41</td>
+            <td>177,438</td>
+            <td>24.4%</td>
+            <td>78</td>
+        </tr>
+        <tr>
+            <td>000001.SZ</td>
+            <td>11.1</td>
+            <td>206,177</td>
+            <td>18.8%</td>
+            <td>78</td>
+        </tr>
+        <tr>
+            <td>00700.HK</td>
+            <td>434.6</td>
+            <td>128,669</td>
+            <td>41.0%</td>
+            <td>76</td>
+        </tr>
+        <tr>
+            <td>09988.HK</td>
+            <td>110.0</td>
+            <td>110,000</td>
+            <td>50.3%</td>
+            <td>76</td>
+        </tr>
+        <tr>
+            <td>AAPL</td>
+            <td>332.79</td>
+            <td>173,324</td>
+            <td>27.9%</td>
+            <td>79</td>
+        </tr>
+        <tr>
+            <td>MSFT</td>
+            <td>384.31</td>
+            <td>155,183</td>
+            <td>33.6%</td>
+            <td>79</td>
+        </tr>
+</table>
+
+<div class="disclaimer">
+    <strong>免责声明</strong><br>
+    本报告由 AI Hedge Fund Skill 自动生成，所有交易建议<b>仅用于研究和教育目的</b>，不构成投资建议。
+    过去表现不代表未来结果。真实交易前请咨询持牌投资顾问。使用者自负盈亏。
+</div>
+
+<p class="footer">Generated by AI Hedge Fund Skill (WorkBuddy Edition) — github.com/Abyss-Seeker/ai-hedge-fund-skill</p>
+
+</body>
+</html>
