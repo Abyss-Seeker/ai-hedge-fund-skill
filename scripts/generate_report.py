@@ -40,13 +40,16 @@ def generate_html_report(data: dict, output_path: str) -> str:
     summary_rows = ""
     for t in tickers:
         d = decisions.get(t, {})
+        action = d.get("action", "-").upper()
+        act_color = {"BUY": "#22c55e", "SELL": "#ef4444", "SHORT": "#ef4444",
+                     "COVER": "#f59e0b", "HOLD": "#94a3b8"}.get(action, "#000")
         summary_rows += f"""
         <tr>
-            <td>{t}</td>
-            <td><strong>{d.get('action', '-').upper()}</strong></td>
+            <td><strong>{t}</strong></td>
+            <td style="color:{act_color};font-weight:bold">{action}</td>
             <td>{d.get('quantity', 0)}</td>
             <td>{d.get('confidence', 0)}%</td>
-            <td>{d.get('reasoning', '-')[:150]}</td>
+            <td style="font-size:11px;word-wrap:break-word;max-width:320px">{d.get('reasoning', '-')[:200]}</td>
         </tr>"""
 
     # 信号矩阵
@@ -57,15 +60,15 @@ def generate_html_report(data: dict, output_path: str) -> str:
             s = signals.get(ak, {}).get(t, {})
             sig = s.get("signal", "-")
             conf = s.get("confidence", 0)
-            reason = s.get("reasoning", "-")[:150]
+            reason = s.get("reasoning", "-")[:200]
             color = {"bullish": "#22c55e", "bearish": "#ef4444", "neutral": "#94a3b8"}.get(sig, "#000")
             signal_rows += f"""
             <tr>
                 <td>{t}</td>
-                <td>{ak}</td>
+                <td style="font-size:11px">{ak}</td>
                 <td style="color:{color};font-weight:bold">{sig.upper()}</td>
                 <td>{conf}%</td>
-                <td style="font-size:12px">{reason}</td>
+                <td style="font-size:10px;word-wrap:break-word;max-width:340px">{reason}</td>
             </tr>"""
 
     # 风险行
@@ -88,47 +91,58 @@ def generate_html_report(data: dict, output_path: str) -> str:
 <meta charset="utf-8">
 <title>AI Hedge Fund 分析报告</title>
 <style>
-    body {{ font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif; max-width: 900px; margin: auto; padding: 20px; color: #1e293b; }}
-    h1 {{ text-align: center; font-size: 28px; margin-bottom: 5px; }}
-    .subtitle {{ text-align: center; color: #64748b; margin-bottom: 30px; }}
-    h2 {{ border-bottom: 2px solid #e2e8f0; padding-bottom: 5px; margin-top: 30px; }}
-    table {{ width: 100%; border-collapse: collapse; margin: 10px 0 20px; }}
-    th, td {{ border: 1px solid #e2e8f0; padding: 8px 12px; text-align: left; }}
-    th {{ background: #f1f5f9; font-weight: 600; }}
-    .disclaimer {{ background: #fef3c7; border: 1px solid #f59e0b; padding: 15px; margin-top: 30px; border-radius: 6px; font-size: 13px; color: #92400e; }}
-    .footer {{ text-align: center; color: #94a3b8; font-size: 12px; margin-top: 30px; }}
+    * {{ box-sizing: border-box; }}
+    body {{ font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif; max-width: 1000px; margin: auto; padding: 24px; color: #1e293b; }}
+    .cover {{ text-align: center; padding: 40px 0 30px; border-bottom: 2px solid #e2e8f0; margin-bottom: 30px; }}
+    .cover h1 {{ font-size: 32px; margin-bottom: 8px; }}
+    .cover .brand {{ font-size: 14px; color: #6366f1; font-weight: 600; margin-bottom: 5px; }}
+    .subtitle {{ text-align: center; color: #64748b; margin-bottom: 30px; font-size: 13px; }}
+    h2 {{ border-bottom: 2px solid #e2e8f0; padding-bottom: 6px; margin-top: 36px; font-size: 18px; }}
+    table {{ width: 100%; border-collapse: collapse; margin: 10px 0 24px; table-layout: fixed; }}
+    th, td {{ border: 1px solid #e2e8f0; padding: 8px 10px; text-align: left; overflow-wrap: break-word; word-break: break-all; }}
+    th {{ background: #f1f5f9; font-weight: 600; font-size: 13px; }}
+    td {{ font-size: 12px; vertical-align: top; }}
+    .disclaimer {{ background: #fef3c7; border: 1px solid #f59e0b; padding: 16px; margin-top: 36px; border-radius: 8px; font-size: 13px; color: #92400e; }}
+    .signature {{ text-align: center; color: #6366f1; font-size: 13px; font-weight: 600; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e2e8f0; }}
+    @media print {{ body {{ max-width: 100%; }} }}
 </style>
 </head>
 <body>
 
-<h1>AI Hedge Fund 分析报告</h1>
-<p class="subtitle">生成时间: {run_time} | 股票: {', '.join(tickers)}</p>
+<div class="cover">
+    <div class="brand">AI Hedge Fund (WorkBuddy Edition @Tsukimori)</div>
+    <h1>AI Hedge Fund 分析报告</h1>
+    <p class="subtitle">生成时间: {run_time} | 分析标的: {', '.join(tickers)} | 分析师: {len(agent_keys)} 位</p>
+</div>
 
 <h2>一、最终决策摘要</h2>
 <table>
+    <colgroup><col style="width:12%"><col style="width:10%"><col style="width:8%"><col style="width:10%"><col style="width:60%"></colgroup>
     <tr><th>股票</th><th>操作</th><th>数量</th><th>置信度</th><th>理由</th></tr>
     {summary_rows}
 </table>
 
 <h2>二、分析师信号矩阵</h2>
 <table>
+    <colgroup><col style="width:10%"><col style="width:18%"><col style="width:8%"><col style="width:8%"><col style="width:56%"></colgroup>
     <tr><th>股票</th><th>分析师</th><th>信号</th><th>置信度</th><th>推理</th></tr>
     {signal_rows}
 </table>
 
 <h2>三、风险与仓位数据</h2>
 <table>
+    <colgroup><col style="width:15%"><col style="width:15%"><col style="width:20%"><col style="width:20%"><col style="width:15%"></colgroup>
     <tr><th>股票</th><th>当前价格</th><th>仓位上限</th><th>年化波动率</th><th>数据天数</th></tr>
     {risk_rows}
 </table>
 
 <div class="disclaimer">
     <strong>免责声明</strong><br>
-    本报告由 AI Hedge Fund Skill 自动生成，所有交易建议<b>仅用于研究和教育目的</b>，不构成投资建议。
+    本报告由 AI Hedge Fund Skill (WorkBuddy Edition @Tsukimori) 自动生成，所有交易建议<b>仅用于研究和教育目的</b>，不构成投资建议。
     过去表现不代表未来结果。真实交易前请咨询持牌投资顾问。使用者自负盈亏。
 </div>
 
-<p class="footer">Generated by AI Hedge Fund Skill (WorkBuddy Edition) — github.com/Abyss-Seeker/ai-hedge-fund-skill</p>
+<div class="signature">AI Hedge Fund (WorkBuddy Edition @Tsukimori) &mdash; github.com/Abyss-Seeker/ai-hedge-fund-skill</div>
 
 </body>
 </html>"""
@@ -149,8 +163,9 @@ def generate_pdf_report(data: dict, output_path: str) -> str:
 
     pdf = FPDF()
     pdf.add_page()
+    pdf.set_auto_page_break(auto=True, margin=15)
 
-    # 中文字体（尝试常见路径）
+    # 中文字体
     font_paths = [
         "C:/Windows/Fonts/msyh.ttc",
         "C:/Windows/Fonts/simsun.ttc",
@@ -169,7 +184,6 @@ def generate_pdf_report(data: dict, output_path: str) -> str:
                 continue
 
     if not font_loaded:
-        # fallback 到 HTML
         html_path = output_path.replace(".pdf", ".html")
         print("[report] 未找到中文字体，已生成 HTML 替代")
         return generate_html_report(data, html_path)
@@ -179,65 +193,113 @@ def generate_pdf_report(data: dict, output_path: str) -> str:
     signals = data.get("analyst_signals", {})
     risk = data.get("risk_data", {})
     decisions = data.get("decisions", {})
+    agent_keys = [k for k in signals.keys() if k != "risk_management_agent"]
 
     def write_title(text, size=18):
         pdf.set_font("zh", "B", size)
         pdf.cell(0, 12, text, ln=True)
         pdf.ln(4)
 
-    def write_normal(text, size=10):
+    def write_normal(text, size=9):
         pdf.set_font("zh", "", size)
         pdf.cell(0, 7, text, ln=True)
 
-    def write_table(headers, rows, col_widths=None):
-        if not col_widths:
-            col_widths = [pdf.w / len(headers)] * len(headers)
-        pdf.set_font("zh", "B", 9)
-        for h, w in zip(headers, col_widths):
-            pdf.cell(w, 8, h, border=1)
-        pdf.ln()
-        pdf.set_font("zh", "", 8)
-        for row in rows:
-            for cell, w in zip(row, col_widths):
-                pdf.cell(w, 7, str(cell)[:30], border=1)
-            pdf.ln()
+    def write_signature():
         pdf.ln(4)
+        pdf.set_font("zh", "B", 10)
+        pdf.cell(0, 8, "AI Hedge Fund (WorkBuddy Edition @Tsukimori)", ln=True, align="C")
+        pdf.set_font("zh", "", 7)
+        pdf.cell(0, 5, "github.com/Abyss-Seeker/ai-hedge-fund-skill", ln=True, align="C")
 
-    # 封面
-    write_title("AI Hedge Fund 分析报告", 20)
+    def write_table_safe(headers, rows, col_widths, max_rows_per_page=35):
+        """生成防溢出表格：用 multi_cell 做自动换行，行高自适应。
+        每页最多 max_rows_per_page 行，超出自动分页。
+        """
+        n_rows = len(rows)
+        for start in range(0, n_rows, max_rows_per_page):
+            chunk = rows[start:start + max_rows_per_page]
+
+            # 写表头
+            pdf.set_font("zh", "B", 9)
+            _write_row_with_wrap(pdf, headers, col_widths, is_header=True)
+
+            # 写数据行
+            pdf.set_font("zh", "", 7)
+            for row in chunk:
+                _write_row_with_wrap(pdf, row, col_widths, is_header=False)
+
+            pdf.ln(3)
+
+    def _write_row_with_wrap(pdf, cells, widths, is_header=False):
+        """写一行：每个 cell 用 multi_cell 做换行，高度取最大高度。"""
+        max_lines = 1
+        cell_texts = []
+        for i, (cell, w) in enumerate(zip(cells, widths)):
+            text = str(cell)
+            if not is_header and len(text) > 50:
+                text = text[:50] + "..."  # 截断超长 reasoning，PDF 空间有限
+            # 估算行数
+            char_w = pdf.get_string_width("测") if is_header else pdf.get_string_width("测") * 0.9
+            lines = max(1, int(pdf.get_string_width(text) / max(w - 2, char_w)) + 1)
+            lines = min(lines, 4)  # 最多 4 行
+            max_lines = max(max_lines, lines)
+            cell_texts.append((text, lines))
+
+        row_h = max_lines * (8 if is_header else 6)
+
+        # 先画所有 cell 的边框
+        x_start = pdf.get_x()
+        y_start = pdf.get_y()
+
+        for i, ((text, _), w) in enumerate(zip(cell_texts, widths)):
+            pdf.rect(x_start + sum(widths[:i]), y_start, w, row_h)
+
+        # 填文字
+        for i, ((text, _), w) in enumerate(zip(cell_texts, widths)):
+            pdf.set_xy(x_start + sum(widths[:i]) + 1, y_start + 1)
+            pdf.multi_cell(w - 2, 6 if is_header else 5, text, align="L")
+
+        pdf.set_xy(x_start, y_start + row_h)
+
+    # === 封面 ===
+    pdf.set_font("zh", "B", 22)
+    pdf.cell(0, 14, "AI Hedge Fund 分析报告", ln=True, align="C")
+    write_normal("", 2)
+    pdf.set_font("zh", "B", 10)
+    pdf.cell(0, 8, "AI Hedge Fund (WorkBuddy Edition @Tsukimori)", ln=True, align="C")
+    pdf.ln(4)
     write_normal(f"生成时间: {run_time}")
     write_normal(f"分析标的: {', '.join(tickers)}")
-    write_normal(f"分析师: {len([k for k in signals if k != 'risk_management_agent'])} 位")
+    write_normal(f"分析师数量: {len(agent_keys)} 位")
     pdf.ln(6)
 
-    # 摘要
-    write_title("一、最终决策摘要", 14)
+    # === 摘要 ===
+    write_title("一、最终决策摘要", 15)
     summary_rows = []
     for t in tickers:
         d = decisions.get(t, {})
         summary_rows.append([
             t, d.get("action", "-").upper(), str(d.get("quantity", 0)),
-            f"{d.get('confidence', 0)}%", d.get("reasoning", "-")[:80]
+            f"{d.get('confidence', 0)}%", d.get("reasoning", "-")[:60]
         ])
-    write_table(["股票", "操作", "数量", "置信度", "理由"], summary_rows,
-                [30, 20, 20, 20, pdf.w - 90])
+    write_table_safe(["股票", "操作", "数量", "置信度", "理由"], summary_rows,
+                     [28, 16, 16, 16, pdf.w - 76])
 
-    # 信号矩阵
-    write_title("二、分析师信号矩阵", 14)
-    agent_keys = [k for k in signals.keys() if k != "risk_management_agent"]
+    # === 信号矩阵 ===
+    write_title("二、分析师信号矩阵", 15)
     matrix_rows = []
     for t in tickers:
         for ak in agent_keys:
             s = signals.get(ak, {}).get(t, {})
             matrix_rows.append([
                 t, ak, s.get("signal", "-").upper(),
-                str(s.get("confidence", 0)), s.get("reasoning", "-")[:40]
+                str(s.get("confidence", 0)), s.get("reasoning", "-")[:60]
             ])
-    write_table(["股票", "分析师", "信号", "置信度", "推理"], matrix_rows,
-                [25, 40, 20, 20, pdf.w - 105])
+    write_table_safe(["股票", "分析师", "信号", "置信度", "推理"], matrix_rows,
+                     [24, 38, 16, 16, pdf.w - 94], max_rows_per_page=25)
 
-    # 风险
-    write_title("三、风险与仓位数据", 14)
+    # === 风险 ===
+    write_title("三、风险与仓位数据", 15)
     risk_rows = []
     for t in tickers:
         r = risk.get(t, {})
@@ -248,15 +310,18 @@ def generate_pdf_report(data: dict, output_path: str) -> str:
             f"{vol.get('annualized_volatility', 0):.1%}",
             str(vol.get("data_points", 0))
         ])
-    write_table(["股票", "价格", "仓位上限", "年化波动", "数据天数"], risk_rows,
-                [30, 30, 40, 30, pdf.w - 130])
+    write_table_safe(["股票", "价格", "仓位上限", "年化波动", "数据天数"], risk_rows,
+                     [30, 30, 40, 30, pdf.w - 130])
 
-    # 免责
-    pdf.ln(6)
+    # === 免责 + 署名 ===
+    pdf.ln(4)
     pdf.set_font("zh", "", 8)
     pdf.multi_cell(0, 5,
-        "免责声明: 本报告由 AI Hedge Fund Skill 自动生成，所有交易建议仅用于研究和教育目的，"
-        "不构成投资建议。过去表现不代表未来结果。真实交易前请咨询持牌投资顾问。使用者自负盈亏。")
+        "免责声明: 本报告由 AI Hedge Fund Skill (WorkBuddy Edition @Tsukimori) 自动生成，"
+        "所有交易建议仅用于研究和教育目的，不构成投资建议。"
+        "过去表现不代表未来结果。真实交易前请咨询持牌投资顾问。使用者自负盈亏。")
+
+    write_signature()
 
     Path(output_path).parent.mkdir(parents=True, exist_ok=True)
     pdf.output(output_path)

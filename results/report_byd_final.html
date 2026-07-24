@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>AI Hedge Fund 分析报告</title>
+<style>
+    * { box-sizing: border-box; }
+    body { font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif; max-width: 1000px; margin: auto; padding: 24px; color: #1e293b; }
+    .cover { text-align: center; padding: 40px 0 30px; border-bottom: 2px solid #e2e8f0; margin-bottom: 30px; }
+    .cover h1 { font-size: 32px; margin-bottom: 8px; }
+    .cover .brand { font-size: 14px; color: #6366f1; font-weight: 600; margin-bottom: 5px; }
+    .subtitle { text-align: center; color: #64748b; margin-bottom: 30px; font-size: 13px; }
+    h2 { border-bottom: 2px solid #e2e8f0; padding-bottom: 6px; margin-top: 36px; font-size: 18px; }
+    table { width: 100%; border-collapse: collapse; margin: 10px 0 24px; table-layout: fixed; }
+    th, td { border: 1px solid #e2e8f0; padding: 8px 10px; text-align: left; overflow-wrap: break-word; word-break: break-all; }
+    th { background: #f1f5f9; font-weight: 600; font-size: 13px; }
+    td { font-size: 12px; vertical-align: top; }
+    .disclaimer { background: #fef3c7; border: 1px solid #f59e0b; padding: 16px; margin-top: 36px; border-radius: 8px; font-size: 13px; color: #92400e; }
+    .signature { text-align: center; color: #6366f1; font-size: 13px; font-weight: 600; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e2e8f0; }
+    @media print { body { max-width: 100%; } }
+</style>
+</head>
+<body>
+
+<div class="cover">
+    <div class="brand">AI Hedge Fund (WorkBuddy Edition @Tsukimori)</div>
+    <h1>AI Hedge Fund 分析报告</h1>
+    <p class="subtitle">生成时间: 2026-07-25T00:44:31.391050 | 分析标的: sz002594 | 分析师: 19 位</p>
+</div>
+
+<h2>一、最终决策摘要</h2>
+<table>
+    <colgroup><col style="width:12%"><col style="width:10%"><col style="width:8%"><col style="width:10%"><col style="width:60%"></colgroup>
+    <tr><th>股票</th><th>操作</th><th>数量</th><th>置信度</th><th>理由</th></tr>
+    
+        <tr>
+            <td><strong>sz002594</strong></td>
+            <td style="color:#ef4444;font-weight:bold">SHORT</td>
+            <td>1565</td>
+            <td>79%</td>
+            <td style="font-size:11px;word-wrap:break-word;max-width:320px">15/19 bearish; short 1565</td>
+        </tr>
+</table>
+
+<h2>二、分析师信号矩阵</h2>
+<table>
+    <colgroup><col style="width:10%"><col style="width:18%"><col style="width:8%"><col style="width:8%"><col style="width:56%"></colgroup>
+    <tr><th>股票</th><th>分析师</th><th>信号</th><th>置信度</th><th>推理</th></tr>
+    
+            <tr>
+                <td>sz002594</td>
+                <td style="font-size:11px">warren_buffett</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>86%</td>
+                <td style="font-size:10px;word-wrap:break-word;max-width:340px">{"fundamentals": 0, "moat": 0, "management": 1, "intrinsic_value": -651929794739.96, "pricing_power": 0, "total_score": 1, "max_score": 27}</td>
+            </tr>
+            <tr>
+                <td>sz002594</td>
+                <td style="font-size:11px">ben_graham</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>73%</td>
+                <td style="font-size:10px;word-wrap:break-word;max-width:340px">score 4/15 EPS all positive</td>
+            </tr>
+            <tr>
+                <td>sz002594</td>
+                <td style="font-size:11px">peter_lynch</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>83%</td>
+                <td style="font-size:10px;word-wrap:break-word;max-width:340px">total 1.7/10</td>
+            </tr>
+            <tr>
+                <td>sz002594</td>
+                <td style="font-size:11px">nassim_taleb</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>88%</td>
+                <td style="font-size:10px;word-wrap:break-word;max-width:340px">fragile 2/50</td>
+            </tr>
+            <tr>
+                <td>sz002594</td>
+                <td style="font-size:11px">aswath_damodaran</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>95%</td>
+                <td style="font-size:10px;word-wrap:break-word;max-width:340px">Damodaran on sz002594: 0/8 DCF≈6/sh </td>
+            </tr>
+            <tr>
+                <td>sz002594</td>
+                <td style="font-size:11px">bill_ackman</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>95%</td>
+                <td style="font-size:10px;word-wrap:break-word;max-width:340px">Ackman on sz002594: 0/14 rev growth -59.5%</td>
+            </tr>
+            <tr>
+                <td>sz002594</td>
+                <td style="font-size:11px">cathie_wood</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>95%</td>
+                <td style="font-size:10px;word-wrap:break-word;max-width:340px">Wood on sz002594: 0.0/13 (disrupt 0.0 innov 0.0 val 0)</td>
+            </tr>
+            <tr>
+                <td>sz002594</td>
+                <td style="font-size:11px">charlie_munger</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>92%</td>
+                <td style="font-size:10px;word-wrap:break-word;max-width:340px">Munger on sz002594: 0.8/10 (moat 0.0 mgmt 0.0 pred 3.0)</td>
+            </tr>
+            <tr>
+                <td>sz002594</td>
+                <td style="font-size:11px">michael_burry</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>83%</td>
+                <td style="font-size:10px;word-wrap:break-word;max-width:340px">Burry on sz002594: 2/12 </td>
+            </tr>
+            <tr>
+                <td>sz002594</td>
+                <td style="font-size:11px">mohnish_pabrai</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>95%</td>
+                <td style="font-size:10px;word-wrap:break-word;max-width:340px">Pabrai on sz002594: 0.4/10 (downside 0 val 0 double 2)</td>
+            </tr>
+            <tr>
+                <td>sz002594</td>
+                <td style="font-size:11px">phil_fisher</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>92%</td>
+                <td style="font-size:10px;word-wrap:break-word;max-width:340px">Fisher on sz002594: 0.8/10 (grow 0.0 marg 0.0 eff 1.7)</td>
+            </tr>
+            <tr>
+                <td>sz002594</td>
+                <td style="font-size:11px">rakesh_jhunjhunwala</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>92%</td>
+                <td style="font-size:10px;word-wrap:break-word;max-width:340px">Jhunjhunwala on sz002594: 2/24 MoS 0.0%</td>
+            </tr>
+            <tr>
+                <td>sz002594</td>
+                <td style="font-size:11px">stanley_druckenmiller</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>84%</td>
+                <td style="font-size:10px;word-wrap:break-word;max-width:340px">Druckenmiller on sz002594: 1.6/10 (growth 0.0 risk 1.7 val 0.0)</td>
+            </tr>
+            <tr>
+                <td>sz002594</td>
+                <td style="font-size:11px">technical_analyst</td>
+                <td style="color:#22c55e;font-weight:bold">BULLISH</td>
+                <td>26%</td>
+                <td style="font-size:10px;word-wrap:break-word;max-width:340px">trend=neutral mom=bullish mr=neutral vol=32.5%</td>
+            </tr>
+            <tr>
+                <td>sz002594</td>
+                <td style="font-size:11px">fundamentals_analyst</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>100%</td>
+                <td style="font-size:10px;word-wrap:break-word;max-width:340px">0B/4Be/0N</td>
+            </tr>
+            <tr>
+                <td>sz002594</td>
+                <td style="font-size:11px">growth_analyst</td>
+                <td style="color:#ef4444;font-weight:bold">BEARISH</td>
+                <td>76%</td>
+                <td style="font-size:10px;word-wrap:break-word;max-width:340px">weighted 0.12</td>
+            </tr>
+            <tr>
+                <td>sz002594</td>
+                <td style="font-size:11px">valuation_analyst</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>50%</td>
+                <td style="font-size:10px;word-wrap:break-word;max-width:340px">PE=30.4 PB=3.6 DCF_gap=680.4%</td>
+            </tr>
+            <tr>
+                <td>sz002594</td>
+                <td style="font-size:11px">news_sentiment_analyst</td>
+                <td style="color:#94a3b8;font-weight:bold">NEUTRAL</td>
+                <td>50%</td>
+                <td style="font-size:10px;word-wrap:break-word;max-width:340px">0B/0Be/10N</td>
+            </tr>
+            <tr>
+                <td>sz002594</td>
+                <td style="font-size:11px">sentiment_analyst</td>
+                <td style="color:#22c55e;font-weight:bold">BULLISH</td>
+                <td>70%</td>
+                <td style="font-size:10px;word-wrap:break-word;max-width:340px">contrarian: 83% bearish</td>
+            </tr>
+</table>
+
+<h2>三、风险与仓位数据</h2>
+<table>
+    <colgroup><col style="width:15%"><col style="width:15%"><col style="width:20%"><col style="width:20%"><col style="width:15%"></colgroup>
+    <tr><th>股票</th><th>当前价格</th><th>仓位上限</th><th>年化波动率</th><th>数据天数</th></tr>
+    
+        <tr>
+            <td>sz002594</td>
+            <td>91.89</td>
+            <td>143,809</td>
+            <td>32.5%</td>
+            <td>78</td>
+        </tr>
+</table>
+
+<div class="disclaimer">
+    <strong>免责声明</strong><br>
+    本报告由 AI Hedge Fund Skill (WorkBuddy Edition @Tsukimori) 自动生成，所有交易建议<b>仅用于研究和教育目的</b>，不构成投资建议。
+    过去表现不代表未来结果。真实交易前请咨询持牌投资顾问。使用者自负盈亏。
+</div>
+
+<div class="signature">AI Hedge Fund (WorkBuddy Edition @Tsukimori) &mdash; github.com/Abyss-Seeker/ai-hedge-fund-skill</div>
+
+</body>
+</html>
