@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+
+# Data cache (不要提交用户本地缓存)
+data_cache/*.json
+data_cache/_*
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Results (生成文件，不提交)
+scripts/results/*.json
+results/*.json
+
+# OS
+.DS_Store
+Thumbs.db

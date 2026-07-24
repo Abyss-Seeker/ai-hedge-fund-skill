@@ -1,0 +1,10 @@
+# AI Hedge Fund Skill - Python 依赖
+
+# 核心依赖：全部标准库，不需要 pip install
+
+# 数据获取依赖 westock-data（WorkBuddy 内置 Node.js CLI）
+# 独立使用时需要 WorkBuddy 运行环境或自行安装 westock-data
+
+# 可选的 GitHub Actions / 测试 依赖：
+# pytest>=7.0
+# pytest-cov>=4.0
