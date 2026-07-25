@@ -4,6 +4,7 @@
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
 
 > **WorkBuddy搜索 "技能-AI对冲基金智囊团" 即可一键添加使用**
+
 > **Agent一键安装Prompt：** ```请根据 https://skillhub.cn/install/skillhub.md，安装 ai-hedge-team。```
 
 **此项目为AI辅助生成，仅作学习探讨使用，不可作为投资参考。**
